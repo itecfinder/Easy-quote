@@ -1,12 +1,27 @@
-"use client";
+'use client';
 
-import AppShell from "@/components/layout/app-shell";
-import DashboardScreen from "@/components/screens/dashboard-screen";
+import { AppProvider } from '@/context/app-context';
+import { Sidebar } from './sidebar';
+import { Topbar } from './topbar';
 
-export default function HomePage() {
+export function AppShell({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <AppShell>
-      <DashboardScreen />
-    </AppShell>
+    <AppProvider>
+      <div className="min-h-screen bg-background flex">
+        <Sidebar />
+
+        <div className="flex-1 flex flex-col min-w-0">
+          <Topbar />
+
+          <main className="flex-1 p-6">
+            {children}
+          </main>
+        </div>
+      </div>
+    </AppProvider>
   );
 }
