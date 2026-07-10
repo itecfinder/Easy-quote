@@ -1,8 +1,12 @@
-export default function Home() {
+"use client";
+
+import AppShell from "@/components/layout/app-shell";
+import DashboardScreen from "@/components/screens/dashboard-screen";
+
+export default function HomePage() {
   return (
-    <main>
-      <h1>EasyQuote</h1>
-      <p>Welcome to EasyQuote.</p>
-    </main>
+    <AppShell>
+      <DashboardScreen />
+    </AppShell>
   );
 }
