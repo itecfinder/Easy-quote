@@ -1,11 +1,3 @@
-export type MemberType = 'paid' | 'free' | 'new';
-
-export interface SessionPayload {
-  email: string;
-  planId: number;
-  memberType: MemberType;
-}
-
 export interface LineItem {
   id: string;
   description: string;
@@ -48,7 +40,11 @@ export interface Invoice {
   id?: string;
   projectId?: string;
   invoiceNumber: string;
-  data: Estimate & { customerName: string; customerEmail: string; companyName: string };
+  data: Estimate & {
+    customerName: string;
+    customerEmail: string;
+    companyName: string;
+  };
   createdAt?: string;
 }
 
@@ -61,6 +57,5 @@ export interface Contractor {
   license?: string;
   website?: string;
   logoUrl?: string;
-  membershipPlan: number;
   createdAt?: string;
 }
