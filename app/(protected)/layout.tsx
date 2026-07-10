@@ -1,13 +1,12 @@
-import { redirect } from 'next/navigation';
-import { getSession } from '@/lib/auth';
-import { AppShell } from '@/components/layout/app-shell';
+import { AppShell } from "@/components/layout/app-shell";
 
-export default async function ProtectedLayout({ children }: { children: React.ReactNode }) {
-  const session = await getSession();
-  if (!session) redirect('/login');
-
+export default function ProtectedLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <AppShell session={session}>
+    <AppShell>
       {children}
     </AppShell>
   );
