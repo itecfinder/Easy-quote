@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import {
   ScanLine,
   FileText,
@@ -9,8 +8,10 @@ import {
   FolderOpen,
 } from "lucide-react";
 
+import { useApp } from "@/context/AppContext";
+
 export default function WelcomePage() {
-  const router = useRouter();
+  const { go } = useApp();
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
@@ -116,7 +117,7 @@ export default function WelcomePage() {
 
 
             <button
-              onClick={() => router.push("/capture")}
+              onClick={() => go("project-capture")}
               className="mt-8 w-full flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-4 text-lg font-semibold text-primary-foreground"
             >
               <ScanLine className="h-5 w-5" />
@@ -124,20 +125,17 @@ export default function WelcomePage() {
               New Project
 
               <ArrowRight className="h-5 w-5" />
-
             </button>
 
 
 
             <button
-              onClick={() => router.push("/dashboard")}
+              onClick={() => go("dashboard")}
               className="mt-3 w-full flex items-center justify-center gap-2 rounded-lg border px-5 py-4 text-lg font-semibold"
             >
-
               <FolderOpen className="h-5 w-5" />
 
               View Dashboard
-
             </button>
 
 
@@ -152,4 +150,3 @@ export default function WelcomePage() {
     </div>
   );
 }
-
