@@ -11,7 +11,7 @@ import type { ScanResult } from '@/lib/types';
 
 export function ScanScreen() {
   const router = useRouter();
-  const { project, setScanResult, memberType } = useApp();
+  const { project, setScanResult } = useApp();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -63,8 +63,8 @@ export function ScanScreen() {
           <CardContent className="p-6 text-center">
             <p className="text-destructive font-medium mb-2">{error}</p>
             <p className="text-sm text-muted-foreground mb-4">
-              {memberType === 'free' ? 'Your free estimate may have been used.' : 'Please try again.'}
-            </p>
+  Please try again.
+         </p>
             <div className="flex gap-2 justify-center">
               <Button variant="outline" onClick={() => router.push('/capture')}>Back</Button>
               <Button onClick={runAnalysis}>Retry</Button>
