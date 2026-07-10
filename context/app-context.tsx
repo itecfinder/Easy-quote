@@ -8,7 +8,9 @@ interface AppContextValue {
   contractor: Contractor | null;
   setContractor: (c: Contractor | null) => void;
   memberType: 'paid' | 'free' | 'new';
+  setMemberType: (t: 'paid' | 'free' | 'new') => void;
   planId: number;
+  setPlanId: (id: number) => void;
   project: ProjectData;
   setProject: (p: ProjectData) => void;
   scanResult: ScanResult | null;
@@ -23,26 +25,33 @@ const AppContext = createContext<AppContextValue | null>(null);
 
 export function AppProvider({
   children,
-  session,
 }: {
   children: React.ReactNode;
-  session: { email: string; planId: number; memberType: 'paid' | 'free' | 'new' };
 }) {
   const [contractor, setContractor] = useState<Contractor | null>(null);
+
+  // Default values until contractor/profile is loaded
+  const [memberType, setMemberType] = useState<'paid' | 'free' | 'new'>('new');
+  const [planId, setPlanId] = useState(0);
+
   const [project, setProject] = useState<ProjectData>(emptyProject);
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
   const [estimate, setEstimate] = useState<Estimate>(emptyEstimate);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  const triggerRefresh = useCallback(() => setRefreshKey((k) => k + 1), []);
+  const triggerRefresh = useCallback(() => {
+    setRefreshKey((k) => k + 1);
+  }, []);
 
   return (
     <AppContext.Provider
       value={{
         contractor,
         setContractor,
-        memberType: session.memberType,
-        planId: session.planId,
+        memberType,
+        setMemberType,
+        planId,
+        setPlanId,
         project,
         setProject,
         scanResult,
@@ -60,6 +69,10 @@ export function AppProvider({
 
 export function useApp() {
   const ctx = useContext(AppContext);
-  if (!ctx) throw new Error('useApp must be used within AppProvider');
+
+  if (!ctx) {
+    throw new Error('useApp must be used within AppProvider');
+  }
+
   return ctx;
 }
