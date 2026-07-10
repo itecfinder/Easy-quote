@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+
 import {
   Card,
   CardContent,
@@ -8,31 +9,38 @@ import {
   CardTitle,
   CardDescription,
 } from '@/components/ui/card';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+
 import {
   Building2,
   Save,
   Loader2,
   LogOut,
-  Crown,
 } from 'lucide-react';
+
 import { useApp } from '@/context/app-context';
 import { EXIT_URL } from '@/lib/constants';
+
 export function SettingsScreen() {
   const {
     contractor,
     setContractor,
   } = useApp();
+
   const email = contractor?.email || '';
+
   // ---------------- FORM STATE ----------------
+
   const [companyName, setCompanyName] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
   const [license, setLicense] = useState('');
 
   const [logoFile, setLogoFile] = useState<File | null>(null);
+
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
@@ -41,33 +49,43 @@ export function SettingsScreen() {
 
   useEffect(() => {
     if (!contractor) return;
+
     setCompanyName(contractor.companyName || '');
     setPhone(contractor.phone || '');
     setAddress(contractor.address || '');
     setLicense(contractor.license || '');
+
   }, [contractor]);
+
   // ---------------- LOGO ----------------
+
   async function uploadLogo(file: File) {
     // Temporary preview.
-    // Replace later with BD/MySQL upload.
+    // Replace later with real storage upload.
     return URL.createObjectURL(file);
   }
+
   // ---------------- SAVE PROFILE ----------------
 
   async function handleSave() {
     setSaving(true);
     setSaved(false);
     setError('');
+
     try {
       let finalLogoUrl = contractor?.logoUrl || '';
+
       if (logoFile) {
         finalLogoUrl = await uploadLogo(logoFile);
       }
+
       const response = await fetch('/api/profile/update', {
         method: 'POST',
+
         headers: {
           'Content-Type': 'application/json',
         },
+
         body: JSON.stringify({
           email,
           companyName,
@@ -77,56 +95,73 @@ export function SettingsScreen() {
           logoUrl: finalLogoUrl,
         }),
       });
+
       if (!response.ok) {
-        throw new Error(
-          'Profile update failed'
-        );
+        throw new Error('Profile update failed');
       }
+
       setContractor({
-        ...(contractor || {}),
+        id: contractor?.id,
         email,
         companyName,
         phone,
         address,
         license,
         logoUrl: finalLogoUrl,
+        website: contractor?.website,
+        createdAt: contractor?.createdAt,
       });
+
       setSaved(true);
+
       setTimeout(() => {
         setSaved(false);
       }, 2000);
+
     } catch (err: any) {
       setError(
         err.message || 'Save failed'
       );
+
     } finally {
       setSaving(false);
     }
   }
+
   // ---------------- EXIT ----------------
 
   function handleExit() {
     localStorage.clear();
     window.location.href = EXIT_URL;
   }
+
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
+
       {/* BUSINESS PROFILE */}
+
       <Card>
         <CardHeader>
+
           <CardTitle className="flex items-center gap-2 text-sm font-medium">
             <Building2 className="h-4 w-4" />
             Business Profile
           </CardTitle>
+
           <CardDescription>
             {email || 'Create your contractor profile'}
           </CardDescription>
+
         </CardHeader>
+
+
         <CardContent className="space-y-4">
+
           <div className="space-y-2">
             <Label>
               Company Name
             </Label>
+
             <Input
               value={companyName}
               onChange={(e) =>
@@ -134,20 +169,27 @@ export function SettingsScreen() {
               }
             />
           </div>
+
+
           <div className="space-y-2">
             <Label>
               Email
             </Label>
+
             <Input
               value={email}
               disabled
             />
           </div>
+
+
           <div className="grid sm:grid-cols-2 gap-4">
+
             <div className="space-y-2">
               <Label>
                 Phone
               </Label>
+
               <Input
                 value={phone}
                 onChange={(e) =>
@@ -155,10 +197,13 @@ export function SettingsScreen() {
                 }
               />
             </div>
+
+
             <div className="space-y-2">
               <Label>
                 License
               </Label>
+
               <Input
                 value={license}
                 onChange={(e) =>
@@ -166,11 +211,15 @@ export function SettingsScreen() {
                 }
               />
             </div>
+
           </div>
+
+
           <div className="space-y-2">
             <Label>
               Address
             </Label>
+
             <Input
               value={address}
               onChange={(e) =>
@@ -178,10 +227,14 @@ export function SettingsScreen() {
               }
             />
           </div>
+
+
           <div className="space-y-2">
+
             <Label>
               Upload Logo
             </Label>
+
             <Input
               type="file"
               accept="image/*"
@@ -191,72 +244,83 @@ export function SettingsScreen() {
                 )
               }
             />
+
           </div>
+
+
           {error && (
             <p className="text-sm text-red-500">
               {error}
             </p>
           )}
+
+
           {saved && (
             <p className="text-sm text-green-600">
               Profile saved
             </p>
           )}
+
+
           <Button
             onClick={handleSave}
             disabled={saving}
-            className="w-full">
+            className="w-full"
+          >
+
             {saving ? (
               <Loader2 className="h-4 w-4 animate-spin mr-2" />
             ) : (
               <Save className="h-4 w-4 mr-2" />
             )}
-            Save Changes
-          </Button>
-        </CardContent>
-      </Card>
-      {/* UPGRADE */}
-      <Card className="border-primary/30 bg-primary/5">
-        <CardContent className="p-6 flex justify-between items-center">
-          <div>
-            <h3 className="font-semibold flex items-center gap-2">
-              <Crown className="h-4 w-4" />
-              Upgrade to Paid
-            </h3>
-            <p className="text-sm text-muted-foreground">
 
-              Unlimited estimates and premium features.
-            </p>
-          </div>
-          <Button
-            onClick={() =>
-              window.location.href = EXIT_URL
-            }
-          >
-            Upgrade
+            Save Changes
+
           </Button>
+
+
         </CardContent>
+
       </Card>
+
+
       {/* EXIT */}
+
       <Card className="border-destructive/30">
+
         <CardContent className="p-6 flex justify-between items-center">
+
           <div>
+
             <h3 className="font-semibold flex items-center gap-2">
+
               <LogOut className="h-4 w-4 text-red-500" />
+
               Exit
+
             </h3>
+
+
             <p className="text-sm text-muted-foreground">
               Return to portal.
             </p>
+
           </div>
+
+
           <Button
             variant="destructive"
             onClick={handleExit}
           >
             Exit
           </Button>
+
+
         </CardContent>
+
       </Card>
+
+
     </div>
   );
 }
