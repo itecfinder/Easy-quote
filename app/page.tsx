@@ -1,5 +1,8 @@
-import { redirect } from 'next/navigation';
-
 export default function Home() {
-  redirect('/login');
+  return (
+    <main>
+      <h1>EasyQuote</h1>
+      <p>Welcome to EasyQuote.</p>
+    </main>
+  );
 }
