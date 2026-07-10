@@ -7,16 +7,16 @@ import { emptyProject, emptyEstimate } from '@/lib/estimate-utils';
 interface AppContextValue {
   contractor: Contractor | null;
   setContractor: (c: Contractor | null) => void;
-  memberType: 'paid' | 'free' | 'new';
-  setMemberType: (t: 'paid' | 'free' | 'new') => void;
-  planId: number;
-  setPlanId: (id: number) => void;
+
   project: ProjectData;
   setProject: (p: ProjectData) => void;
+
   scanResult: ScanResult | null;
   setScanResult: (s: ScanResult | null) => void;
+
   estimate: Estimate;
   setEstimate: (e: Estimate) => void;
+
   refreshKey: number;
   triggerRefresh: () => void;
 }
@@ -30,13 +30,12 @@ export function AppProvider({
 }) {
   const [contractor, setContractor] = useState<Contractor | null>(null);
 
-  // Default values until contractor/profile is loaded
-  const [memberType, setMemberType] = useState<'paid' | 'free' | 'new'>('new');
-  const [planId, setPlanId] = useState(0);
-
   const [project, setProject] = useState<ProjectData>(emptyProject);
+
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
+
   const [estimate, setEstimate] = useState<Estimate>(emptyEstimate);
+
   const [refreshKey, setRefreshKey] = useState(0);
 
   const triggerRefresh = useCallback(() => {
@@ -48,16 +47,16 @@ export function AppProvider({
       value={{
         contractor,
         setContractor,
-        memberType,
-        setMemberType,
-        planId,
-        setPlanId,
+
         project,
         setProject,
+
         scanResult,
         setScanResult,
+
         estimate,
         setEstimate,
+
         refreshKey,
         triggerRefresh,
       }}
@@ -76,3 +75,4 @@ export function useApp() {
 
   return ctx;
 }
+
